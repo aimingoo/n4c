@@ -13,7 +13,7 @@ N4C最初提出的背景是面向实时计算的，它对实时计算提出了�
 
 本项目(aimingoo/n4c)只提供N4C的标准化文档和相关的索引。
 
-===Table of Contents
+###Table of Contents
   * [N4C specifications](#n4c-specifications)
     * [1. N4C architecture](#1-n4c-architecture)
     * [2. PEDT specifications](#2-pedt-specifications)
