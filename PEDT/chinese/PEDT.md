@@ -224,32 +224,26 @@ task对象可以定义一个arguments成员来表达该任务执行时的依赖�
 #### PEDT define specification 0.9
 
 > * 0.9-1 typeDef is limited JSON format
-
-``` 
-1. full support JSON value types
-2. limited support JSON array and object types
-	- array/object data can't using members or elements of other array/object
-	- task execute result is limited JSON format, or(optional) support full JSON format
-```
-
 >
-
+> ``` text
+> 1. full support JSON value types
+> 2. limited support JSON array and object types
+> 	- array/object data can't using members or elements of > other array/object
+> 	- task execute result is limited JSON format, or(optional) support full JSON format
+> ```
 > * 0.9-2 "task:" is top level prefix
-
-``` 
-1. task arguments is unsupported in task.run and task.map
-2. local taskObject/function is unsupported in task.run
-```
-
 >
-
+> ``` text
+> 1. task arguments is unsupported in task.run and task.map
+> 2. local taskObject/function is unsupported in task.run
+> ```
 > * 0.9-3 "script:" prefix is optional
-
-``` 
-1. taskDef.distributed is optional
-2. taskDef.promised is optional
-3. taskDef.rejected is optional
-```
+>
+> ``` text
+> 1. taskDef.distributed is optional
+> 2. taskDef.promised is optional
+> 3. taskDef.rejected is optional
+> ```
 
 PEDT任务定义规范0.9的主要限制在于不支持JSON的array/object的多级定义或相互嵌套的定义。例如下面三个定义都是非法的：
 
@@ -280,42 +274,33 @@ PEDT任务定义规范0.9的主要限制在于不支持JSON的array/object的多
 { "x": "task:base64:NTcwYjQxYmE2MWFkZTYzOTg3ZDMxOGIwYzA4ZTRmYTRAaHR0cDovL2xvY2FsaG9zdC90ZXN0OioK" }
 ```
 
-> "@localhost"中的localhost不是一个distribution scope，而是一个系统内部的范围标识(token)，所以它不是标准的three parts格式的。这是由不同处理系统决定的一个可选实现。
+> NOTE: "@localhost"中的localhost不是一个distribution scope，而是一个系统内部的范围标识(token)，所以它不是标准的three parts格式的。这是由不同处理系统决定的一个可选实现。
 
 #### PEDT define specification 1.0
 
 > * 1.0-1 full support JSON types
-
-
-
 > * 1.0-2 support top level prefix: "data:", "script:"
->   
->   ``` 
+>
+>   ``` text
 >   1. "task:" is not top level prefix, but support downward compatibility
 >   2. "string:" is subType for "data:" only
 >   3. support encodeType: "base64" and "utf8"	
 >   ```
->   
 > * 1.0-3 support full taskDef/task features
->   
->   ``` 
+>
+>   ``` text
 >   1. support scope property for task.map method
 >   2. support arguments property for task.map and task.run
 >   3. support taskDef.promised, taskDef.distributed and taskDef.rejected fields
 >   4. local taskObject/function is strong recommend in task.run
 >   ```
->   
 > * 1.0-4 support taskDef as member of other taskDef
->   
->   ``` 
+>
+>   ``` text
 >   1. support taskDef array as member of other taskDef
 >   ```
-
-
-
 > * 1.0-5 typeDef as arguments is optional
->   
->   ``` 
+>   ``` text
 >   1. "reduce" as task method is optional
 >   2. "daemon" as task method is optional
 >   ```
@@ -329,19 +314,15 @@ PEDT任务定义规范1.0的主要限制是task的arguments是一个简单的、
 > * 1.1-1 full features of specification 1.0 is supported, and downward compatibility
 > * 1.1-2 access current task processor in all taskDef methods and task.run method	
 > * 1.1-3 support taskDef as task arguments
-
-
-
 > * 1.1-4 more task method is optional
->   
->   ``` 
+>
+>   ``` text
 >   1. "reduce" and "daemon" as task method is strong recommend
 >   2.  more task method is optional
 >   ```
->   
 > * 1.1-5 run method is map method at local, optional	
->   
->   ``` 
+>
+>   ``` text
 >   1. support full/real distribution taskDef when this feature ready
 >   ```
 
@@ -696,9 +677,7 @@ function distributed_request(URLs, taskId, args)
 
 在使用GET请求时，args参数将会被编码成url参数继续追加到上面的URL。从args对象到url参数字符串编码的方法，参考：
 
-[querystring.stringify in nodejs](
-
-https://nodejs.org/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options)
+[querystring.stringify in nodejs](https://nodejs.org/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options)
 
 [ngx.encode_args in lua-nginx](https://github.com/openresty/lua-nginx-module#ngxencode_args)
 
