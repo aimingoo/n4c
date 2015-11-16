@@ -224,26 +224,28 @@ task对象可以定义一个arguments成员来表达该任务执行时的依赖�
 #### PEDT define specification 0.9
 
 > * 0.9-1 typeDef is limited JSON format
->
-> ``` text
-> 1. full support JSON value types
-> 2. limited support JSON array and object types
-> 	- array/object data can't using members or elements of > other array/object
-> 	- task execute result is limited JSON format, or(optional) support full JSON format
-> ```
+>   
+>   ``` 
+>   1. full support JSON value types
+>   2. limited support JSON array and object types
+>   	- array/object data can't using members or elements of > other array/object
+>   	- task execute result is limited JSON format, or(optional) support full JSON format
+>   ```
+>   
 > * 0.9-2 "task:" is top level prefix
->
-> ``` text
-> 1. task arguments is unsupported in task.run and task.map
-> 2. local taskObject/function is unsupported in task.run
-> ```
+>   
+>   ``` 
+>   1. task arguments is unsupported in task.run and task.map
+>   2. local taskObject/function is unsupported in task.run
+>   ```
+>   
 > * 0.9-3 "script:" prefix is optional
->
-> ``` text
-> 1. taskDef.distributed is optional
-> 2. taskDef.promised is optional
-> 3. taskDef.rejected is optional
-> ```
+>   
+>   ``` 
+>   1. taskDef.distributed is optional
+>   2. taskDef.promised is optional
+>   3. taskDef.rejected is optional
+>   ```
 
 PEDT任务定义规范0.9的主要限制在于不支持JSON的array/object的多级定义或相互嵌套的定义。例如下面三个定义都是非法的：
 
@@ -279,28 +281,33 @@ PEDT任务定义规范0.9的主要限制在于不支持JSON的array/object的多
 #### PEDT define specification 1.0
 
 > * 1.0-1 full support JSON types
+>   
 > * 1.0-2 support top level prefix: "data:", "script:"
->
->   ``` text
->   1. "task:" is not top level prefix, but support downward compatibility
->   2. "string:" is subType for "data:" only
->   3. support encodeType: "base64" and "utf8"	
+>   
+>   ``` 
+>     1. "task:" is not top level prefix, but support downward compatibility
+>     2. "string:" is subType for "data:" only
+>     3. support encodeType: "base64" and "utf8"
 >   ```
+>   
 > * 1.0-3 support full taskDef/task features
->
->   ``` text
->   1. support scope property for task.map method
->   2. support arguments property for task.map and task.run
->   3. support taskDef.promised, taskDef.distributed and taskDef.rejected fields
->   4. local taskObject/function is strong recommend in task.run
+>   
+>   ``` 
+>     1. support scope property for task.map method
+>     2. support arguments property for task.map and task.run
+>     3. support taskDef.promised, taskDef.distributed and taskDef.rejected fields
+>     4. local taskObject/function is strong recommend in task.run
 >   ```
+>   
 > * 1.0-4 support taskDef as member of other taskDef
->
->   ``` text
->   1. support taskDef array as member of other taskDef
+>   
+>   ``` 
+>     1. support taskDef array as member of other taskDef
 >   ```
+>   
 > * 1.0-5 typeDef as arguments is optional
->   ``` text
+>   
+>   ``` 
 >   1. "reduce" as task method is optional
 >   2. "daemon" as task method is optional
 >   ```
@@ -312,18 +319,22 @@ PEDT任务定义规范1.0的主要限制是task的arguments是一个简单的、
 #### PEDT define specification 1.1
 
 > * 1.1-1 full features of specification 1.0 is supported, and downward compatibility
+>   
 > * 1.1-2 access current task processor in all taskDef methods and task.run method	
+>   
 > * 1.1-3 support taskDef as task arguments
+>   
 > * 1.1-4 more task method is optional
->
->   ``` text
->   1. "reduce" and "daemon" as task method is strong recommend
->   2.  more task method is optional
+>   
+>   ``` 
+>     1. "reduce" and "daemon" as task method is strong recommend
+>     2.  more task method is optional
 >   ```
-> * 1.1-5 run method is map method at local, optional	
->
->   ``` text
->   1. support full/real distribution taskDef when this feature ready
+>   
+> * 1.1-5 run method is map method at local, optional
+>   
+>   ``` 
+>     1. support full/real distribution taskDef when this feature ready
 >   ```
 
 PEDT任务定义规范1.1具有目前已知的全部特性集，该规范强烈建议你实现reduce/daemon方法。并且，你可以将run方法作为一个本地的map方法来实现，一旦你这样做，则你整个的系统都是完整而纯粹的可分布式系统了。
@@ -519,7 +530,7 @@ PEDT要求处理系统必须具备如下能力，这些能力简单地描述为�
   提供从上述公共结点中获取由taskId指定的taskDef的能力。该接口将返回JSON值。
 
 > NOTE: 以上三个接口通常被封装成internal_xxx接口，表明它们是内部实现的。并且，它们通常是调用外部的接口来实现功能，而自身只做接口与数据的转换。
->
+> 
 > NOTE: 这三个接口的具体实现与网络环境相关。
 
 ### 规范
@@ -527,100 +538,154 @@ PEDT要求处理系统必须具备如下能力，这些能力简单地描述为�
 #### PEDT process specification 1.0
 
 1. 从taskDef到taskObject的过程
-前提：已经通过download_task(taskId)从远程得到taskDef的文本，或从本地缓存中得到taskDef。
-> 1.1 task_def_decode
-> > 1.1.1 转换成本地对象：localObj = JSON_decode(taskDef)
-> > 1.1.2 处理每个成员，解码所有编码字符串：decodedObj = decode_task_fields(localObj)
-> > > NOTE: decode_task_fields()处理localObj的每个编码字符串成员(obj.x)，并使obj.x = decode(obj.x)，且最终成员x可能不再是字符串类型。
-> >
-> > 1.1.3 如果localObj的成员为对象，则为之递归调用1.1.2
-> > 1.1.4 得到解码结果：taskObject = decodedObj
->
-> 1.2 distributed_task
-> 如果是第一次从远程得到taskDef，且存在distributed方法，调用该方法：distributed(taskObject)
-> 1.3 返回结果：return taskObject
-
+   
+   前提：已经通过download_task(taskId)从远程得到taskDef的文本，或从本地缓存中得到taskDef。
+   
+   > 1.1 task_def_decode
+   > 
+   > > 1.1.1 转换成本地对象：localObj = JSON_decode(taskDef)
+   > > 
+   > > 1.1.2 处理每个成员，解码所有编码字符串：decodedObj = decode_task_fields(localObj)
+   > > 
+   > > > NOTE: decode_task_fields()处理localObj的每个编码字符串成员(obj.x)，并使obj.x = decode(obj.x)，且最终成员x可能不再是字符串类型。
+   > > 
+   > > 1.1.3 如果localObj的成员为对象，则为之递归调用1.1.2
+   > > 
+   > > 1.1.4 得到解码结果：taskObject = decodedObj
+   > 
+   > 1.2 distributed_task
+   > 
+   > 如果是第一次从远程得到taskDef，且存在distributed方法，调用该方法：distributed(taskObject)
+   > 
+   > 1.3 返回结果：return taskObject
+   
 2. 从taskOrder到taskResult的过程
-前提：已经创建了taskObject的一个映像作为taskOrder，确保修改taskOrder的成员不会影响taskObject，且可以访问后者的所有可访问成员。
-> 2.1 promise_static_member
-> > 2.1.1 处理taskOrder的每个成员，如果它是一个task对象，则为该task调用task.map或task.run方法；这些tasks记为taskOrder.x0..n。
-> > > NOTE: 由于taskOrder初始为taskObject的一个映像，因此这时taskOrder.x0与taskObject.x0是相同的；又由于taskObject是从“一次分发，终身不变”的taskDef得来，所以这个x0..n的成员列表以及它们对应的tasks列表事实上也是不变的。
-> >
-> > 2.1.2 将上述方法的结果作为promise对象放到一个与当前taskOrder相关联的数组promises中；这些promises记为promises[0..n]；
-> > > NOTE: 可以在promises中放入被关联的taskOrder以便后续的处理过程能访问到它——而无需建立其它的关联或索引。
-> >
-> > 2.1.3 调用Promise.all(promises)，并得到返回结果值results。如果在Promise.all()调用中出现异常，则进入2.4。
-> > > NOTE: 按照Promise的规范，这个results实际是在.then()的onFulfilled函数中得到的。这个onFulfilled是all promises得到异步的、完全的确认——即执行并返回结果——之后一次性调用的。
->
-> 2.2 promise_member_rewrite
-> 按results的数组元素顺序，严格地将每一个result——这些result记为results[0..n]——抄写到（与之对应task成员的）成员中。即：
-> > taskOrder.x0 = results[0], ...
->
-> 2.3 getTaskResult
-> > 2.3.1 得到结果值：taskResult = taskOrder
-> > 2.3.2 如果taskDef.promised存在，则为taskOrder调用一次该方法：taskResult = promised(taskResult)。如果在调用promised(taskResult)中出现异常，则进入2.4，否则进入2.5。
->
-> 2.4 rejected
-> > 2.4.1 taskResult = taskDef.rejected(reason)
->
-> 2.5 返回结果：return taskResult
-
+   
+   前提：已经创建了taskObject的一个映像作为taskOrder，确保修改taskOrder的成员不会影响taskObject，且可以访问后者的所有可访问成员。
+   
+   > 2.1 promise_static_member
+   > 
+   > > 2.1.1 处理taskOrder的每个成员，如果它是一个task对象，则为该task调用task.map或task.run方法；这些tasks记为taskOrder.x0..n。
+   > > 
+   > > > NOTE: 由于taskOrder初始为taskObject的一个映像，因此这时taskOrder.x0与taskObject.x0是相同的；又由于taskObject是从“一次分发，终身不变”的taskDef得来，所以这个x0..n的成员列表以及它们对应的tasks列表事实上也是不变的。
+   > > 
+   > > 2.1.2 将上述方法的结果作为promise对象放到一个与当前taskOrder相关联的数组promises中；这些promises记为promises[0..n]；
+   > > 
+   > > > NOTE: 可以在promises中放入被关联的taskOrder以便后续的处理过程能访问到它——而无需建立其它的关联或索引。
+   > > 
+   > > 2.1.3 调用Promise.all(promises)，并得到返回结果值results。如果在Promise.all()调用中出现异常，则进入2.4。
+   > > 
+   > > > NOTE: 按照Promise的规范，这个results实际是在.then()的onFulfilled函数中得到的。这个onFulfilled是all promises得到异步的、完全的确认——即执行并返回结果——之后一次性调用的。
+   > 
+   > 2.2 promise_member_rewrite
+   > 
+   > 按results的数组元素顺序，严格地将每一个result——这些result记为results[0..n]——抄写到（与之对应task成员的）成员中。即：
+   > 
+   > > taskOrder.x0 = results[0], ...
+   > 
+   > 2.3 getTaskResult
+   > 
+   > > 2.3.1 得到结果值：taskResult = taskOrder
+   > > 
+   > > 2.3.2 如果taskDef.promised存在，则为taskOrder调用一次该方法：taskResult = promised(taskResult)。如果在调用promised(taskResult)中出现异常，则进入2.4，否则进入2.5。
+   > 
+   > 2.4 rejected
+   > 
+   > > 2.4.1 taskResult = taskDef.rejected(reason)
+   > 
+   > 2.5 返回结果：return taskResult
+   
 3. 实现execute_task(String taskId, Object args)
-该方法要求处理系统执行由taskId指定的taskDef，处理系统可以从本地缓存装载或远程下载该taskDef，也可以执行由taskDef得到并缓存的taskObject，但最终需要返回taskResult。
-> 3.1 internal_download_task
-> 从taskId得到一个可用的taskObject。
-> > 3.1.1 调用内部的download_task()从taskId得到taskDef
-> > 3.1.2 调用本规范之process 1，从taskDef得到taskObject
->
-> 3.2 internal_execute_task
-需要在执行taskDef之前处理args。
-> > 3.2.1 从taskObject得到一个可写映像作为taskOrder，然后mix(taskOrder, args)
-> > > NOTE: 这意味着args中的成员值可以影响到当前处理的taskDef（的映像）的成员信息。
-> >
-> > 3.2.2 调用本规范之process 2，从taskOrder得到taskResult
-> > NOTE: 在规范1.1中“taskDef可以用作arguments”的约定不影响本接口。亦即是说，这里的args不会得到“预先作为taskDef加以执行”的机会。
->
-> 3.3 返回结果：return taskResult
-
+   
+   该方法要求处理系统执行由taskId指定的taskDef，处理系统可以从本地缓存装载或远程下载该taskDef，也可以执行由taskDef得到并缓存的taskObject，但最终需要返回taskResult。
+   
+   > 3.1 internal_download_task
+   > 
+   > 从taskId得到一个可用的taskObject。
+   > 
+   > > 3.1.1 调用内部的download_task()从taskId得到taskDef
+   > > 
+   > > 3.1.2 调用本规范之process 1，从taskDef得到taskObject
+   > 
+   > 3.2 internal_execute_task
+   > 
+   > 需要在执行taskDef之前处理args。
+   > 
+   > > 3.2.1 从taskObject得到一个可写映像作为taskOrder，然后mix(taskOrder, args)
+   > > 
+   > > > NOTE: 这意味着args中的成员值可以影响到当前处理的taskDef（的映像）的成员信息。
+   > > 
+   > > 3.2.2 调用本规范之process 2，从taskOrder得到taskResult
+   > > 
+   > > > NOTE: 在规范1.1中“taskDef可以用作arguments”的约定不影响本接口。亦即是说，这里的args不会得到“预先作为taskDef加以执行”的机会。
+   > 
+   > 3.3 返回结果：return taskResult
+   
 4. 实现map(String distributionScope, String taskId, Object args)
-处理系统应先将distributionScope解释成一组可接受任务分发的结点，并向这些结点的execute_task接口投放RESTfull请求，这些请求中会将args作为参数传入。
-处理系统应在执行调用远程的execute_task接口之前处理args。
-> NOTE: 在规范1.1中，该args可以是一个新的taskDef2，这种情况下taskDef2会被先执行，且taskDef2的结果对象将作为taskDef的输入参数。
-> NOTE: taskId和args作为RESTfull请求中的参数（或数据）传递的细节参考本规范之“调用接口规范”。
-处理系统应从上述结点的execute_task接口中获取返回结果，并将结果按调用顺序装入数组，最终将数组结果解析成本地可用的数据，以作为本次map()调用的返回结果。
-> 4.1 internal_parse_scope
-> 将distributionScope解释成request_uri[0..n]数组。
-> > NOTE: 对distributionScope的解释方法参考本规范之“调用接口规范”。
->
-> 4.2 distributed_request
-> 将request_uri[]提交为一组远程的、并发的WEB RESTfull请求。
-> > 4.2.1 假设request_uri[1..n]记录每个可接受任务分发的结点的uri，该uri指向目标结点中用WEB RESTfull规格颂的execute_task()接口。则distributed_request()用于向该uri发送
-> > > http.request(uri + taskId)
-> >
-> > 这样的GET/POST请求。同时，args将可以http请求中的参数提交到每一个结点。
-> > 4.2.2 用Promise.all()等待所有请求返回结果。
-> > > NOTE: Promise.all()会将每一个结果装入与request_uri[0..n]对应的results[0..n]。
->
-> 4.3 extractMapedTaskResult
-> 从results抽取结果值：maped = JSON_decode(results[0..n])
-> > NOTE: 这里的语义相当于JavaScript中的：
-> > ``` javascript
-> > maped = results.map(JSON.parse)
-> > ```
-> > NOTE: execute_task()的RESTfull接口将返回JSON值，因此本地系统总是能将它解析成对象并放入数组，且最终结果数组仍可以序列化为JSON值。
->
-> 4.4 返回结果数组：return maped
-
+   
+   处理系统应先将distributionScope解释成一组可接受任务分发的结点，并向这些结点的execute_task接口投放RESTfull请求，这些请求中会将args作为参数传入。
+   
+   处理系统应在执行调用远程的execute_task接口之前处理args。
+   
+   > NOTE: 在规范1.1中，该args可以是一个新的taskDef2，这种情况下taskDef2会被先执行，且taskDef2的结果对象将作为taskDef的输入参数。
+   > 
+   > NOTE: taskId和args作为RESTfull请求中的参数（或数据）传递的细节参考本规范之“调用接口规范”。
+   
+   处理系统应从上述结点的execute_task接口中获取返回结果，并将结果按调用顺序装入数组，最终将数组结果解析成本地可用的数据，以作为本次map()调用的返回结果。
+   
+   > 4.1 internal_parse_scope
+   > 
+   > 将distributionScope解释成request_uri[0..n]数组。
+   > 
+   > > NOTE: 对distributionScope的解释方法参考本规范之“调用接口规范”。
+   > 
+   > 4.2 distributed_request
+   > 
+   > 将request_uri[]提交为一组远程的、并发的WEB RESTfull请求。
+   > 
+   > > 4.2.1 假设request_uri[1..n]记录每个可接受任务分发的结点的uri，该uri指向目标结点中用WEB RESTfull规格颂的execute_task()接口。则distributed_request()用于向该uri发送
+   > > 
+   > > > http.request(uri + taskId)
+   > > 
+   > > 这样的GET/POST请求。同时，args将可以http请求中的参数提交到每一个结点。
+   > > 
+   > > 4.2.2 用Promise.all()等待所有请求返回结果。
+   > > 
+   > > > NOTE: Promise.all()会将每一个结果装入与request_uri[0..n]对应的results[0..n]。
+   > 
+   > 4.3 extractMapedTaskResult
+   > 
+   > 从results抽取结果值：maped = JSON_decode(results[0..n])
+   > 
+   > > NOTE: 这里的语义相当于JavaScript中的：
+   > > 
+   > > ``` javascript
+   > > maped = results.map(JSON.parse)
+   > > ```
+   > > 
+   > > NOTE: execute_task()的RESTfull接口将返回JSON值，因此本地系统总是能将它解析成对象并放入数组，且最终结果数组仍可以序列化为JSON值。
+   > 
+   > 4.4 返回结果数组：return maped
+   
 5. 实现run(task, Object args)
-处理系统将针对task的不同情况做处理。
-处理系统应在执行task之前处理args。
-> 5.1 如果task是一个taskId字符串，则交由execute_task()来处理。参见本规范之处理process 3 - 实现execute_task(String taskId, Object args)。
-> 5.2 如果task是一个本地函数，则使用args对象作为唯一参数调用之。
-> 5.3 如果task是一个对象，则尝试作为一个本地任务对象taskObject调用之。参见本规范之处理process 3.2 - internal_execute_task。
-> > NOTE: 在规范1.1中，args参数可以是一个新的taskDef2，这种情况下taskDef2会被先执行，且taskDef2的结果对象将作为taskDef的输入参数。
-> > NOTE: 5.2和5.3是强烈推荐实现(strong recommend)，但不是必需实现的。
-> > NOTE: 过程5.1与后面的两个处理在对待args上并不相同。5.1是将args作为函数的唯一参数调用，而5.2和5.3是调用mix()将args混入到taskOrder。
-> > NOTE: 对于过程5.3，当task是一个taskObject时，即使它拥有（从taskDef继承来的）distributed方法，也不会被调用。
+   
+   处理系统将针对task的不同情况做处理。
+   
+   处理系统应在执行task之前处理args。
+   
+   > 5.1 如果task是一个taskId字符串，则交由execute_task()来处理。参见本规范之处理process 3 - 实现execute_task(String taskId, Object args)。
+   > 
+   > 5.2 如果task是一个本地函数，则使用args对象作为唯一参数调用之。
+   > 
+   > 5.3 如果task是一个对象，则尝试作为一个本地任务对象taskObject调用之。参见本规范之处理process 3.2 - internal_execute_task。
+   > 
+   > > NOTE: 在规范1.1中，args参数可以是一个新的taskDef2，这种情况下taskDef2会被先执行，且taskDef2的结果对象将作为taskDef的输入参数。
+   > > 
+   > > NOTE: 5.2和5.3是强烈推荐实现(strong recommend)，但不是必需实现的。
+   > > 
+   > > NOTE: 过程5.1与后面的两个处理在对待args上并不相同。5.1是将args作为函数的唯一参数调用，而5.2和5.3是调用mix()将args混入到taskOrder。
+   > > 
+   > > NOTE: 对于过程5.3，当task是一个taskObject时，即使它拥有（从taskDef继承来的）distributed方法，也不会被调用。
 
 ## PEDT interface specification
 
@@ -677,9 +742,9 @@ function distributed_request(URLs, taskId, args)
 
 在使用GET请求时，args参数将会被编码成url参数继续追加到上面的URL。从args对象到url参数字符串编码的方法，参考：
 
-[querystring.stringify in nodejs](https://nodejs.org/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options)
-
-[ngx.encode_args in lua-nginx](https://github.com/openresty/lua-nginx-module#ngxencode_args)
+> [querystring.stringify in nodejs](https://nodejs.org/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options)
+> 
+> [ngx.encode_args in lua-nginx](https://github.com/openresty/lua-nginx-module#ngxencode_args)
 
 在使用POST请求时，你有可以选择如下两种HTTP headers之一，来设定在body/data区传送args的方法。
 
@@ -747,8 +812,10 @@ rejected()是taskDef的一个可选声明的处理方法。它可以在每次tas
 也可以在rejected()中调用新的分发方法，并返回后者的结果。
 
 如果rejected没有返回值，则taskResult为null值；否则以rejected的返回结果作为taskResult值。rejected可以显式地reject新的reason来来继续触发异常。
+
 > NOTE: 如何reject新的reason是由处理系统决定的。例如在javascript中的：
-> > ```javascript
+> 
+> > ``` javascript
 > > return Promise.reject(reason)
 > > ```
 
@@ -829,7 +896,7 @@ function task.run(task, args)
 
 如果task是一个taskId字符串，则交由execute_task()来处理。
 
-> 以下为强烈推荐实现(strong recommend)的部分
+> NOTE: 以下为强烈推荐实现(strong recommend)的部分
 > 
 > * 如果task是一个本地函数，则使用args对象作为唯一参数调用之。
 > * 如果task是一个对象，则尝试作为一个本地任务对象taskObject调用之。
@@ -945,8 +1012,6 @@ Content-Length: 68
 成功调用时，返回结果可能是任意JSON文本。推荐使用“Content-Type: application/json”来返回成功调用的结果。
 
 > NOTE: 客户端可以通过检查返回文本前缀，以确定返回值是否是一个有效的JSON文本（注意这并非绝对可靠的方法）。
-
-
 
 当服务端遭遇错误时，通过如下方法来返回错误信息：
 
