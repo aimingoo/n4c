@@ -37,7 +37,7 @@ N4C最初提出的背景是面向实时计算的，它对实时计算提出了�
 
 ## 1. N4C architecture
 
-![n4c architecture](https://github.com/aimingoo/n4c/wiki/images/n4c_rchitecture.png)
+![n4c architecture](https://github.com/aimingoo/n4c/wiki/images/n4c_architecture.png)
 
 N4C整体是一个并行的分布式计算架构，包括如下特性：
 
