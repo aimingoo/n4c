@@ -37,7 +37,19 @@ N4C最初提出的背景是面向实时计算的，它对实时计算提出了�
 
 ## 1. N4C architecture
 
-(TODO)
+![n4c architecture](https://github.com/aimingoo/n4c/wiki/images/n4c_rchitecture.png)
+
+N4C整体是一个并行的分布式计算架构，包括如下特性：
+
+- 实时性：支持就地计算以提供足够的实时性
+- 分布式：使用PEDT分布式任务规范
+- 并行计算：Promise并行计算模型
+
+集群构建在N4C中被称为可通信集群（Communication Cluster），它要求集群的各节点间可以成组通信，这种“成组”的关系被抽象为资源描述（n4c resource description），并通过接口(n4c resource interface)反映到资源管理层。
+
+任务管理层是一个抽象层，其底层的资源管理被再次抽象为范围（Scope）。被放在最顶的应用层不再直接面对“资源”，从而避免了“资源调度”这样的问题。应用层已经被特定地描述为一种“分布式任务”，并有一个独立的规范定义，称为PEDT（Parallel Exchangeable Distribution Task）。
+
+PEDT定义了任务的格式、交互的方法，以及最重要的是，它也定义了“任务调度”的基本单元与模式。
 
 ## 2. PEDT specifications
 

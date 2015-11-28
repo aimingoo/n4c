@@ -15,55 +15,56 @@ Language: Chinese
 PEDT旨在为可计算集群提供一种轻量、高效和跨平台的可靠任务处理机制。
 
 ### Table of Contents
-  * [PEDT Specifications](#pedt-specifications)
-  * [概要](#概要)
-  * [规范](#规范)
-    * [PEDT define specification](#pedt-define-specification)
-      * [基础定义](#基础定义)
-        * [任务定义（taskDef）](#任务定义taskdef)
-        * [任务（task/distribution task）](#任务taskdistribution-task)
-        * [任务标识（taskId）](#任务标识taskid)
-        * [字符串（string）](#字符串string)
-        * [方法(method)](#方法method)
-          * [任务分发范围(distribution scope)](#任务分发范围distribution-scope)
-          * [任务参数（arguments）](#任务参数arguments)
-      * [规范](#规范-1)
-        * [PEDT define specification 0.9](#pedt-define-specification-09)
-        * [PEDT define specification 1.0](#pedt-define-specification-10)
-        * [PEDT define specification 1.1](#pedt-define-specification-11)
-      * [keywords](#keywords)
-    * [PEDT process specification](#pedt-process-specification)
-      * [基础定义](#基础定义-1)
-        * [PEDT任务的四个处理阶段](#pedt任务的四个处理阶段)
-        * [PEDT任务的三个特定处理方法（process method）](#pedt任务的三个特定处理方法process-method)
-        * [PEDT任务的两个特定分发方法（distribution method）](#pedt任务的两个特定分发方法distribution-method)
-        * [对处理系统的基本需求](#对处理系统的基本需求)
-      * [规范](#规范-2)
-        * [PEDT process specification 1.0](#pedt-process-specification-10)
-    * [PEDT interface specification](#pedt-interface-specification)
-      * [本地接口](#本地接口)
-        * [混入对象：mix](#混入对象mix)
-        * [HTTP请求：distributed_request](#http请求distributed_request)
-        * [方法：taskDef.distributed](#方法taskdefdistributed)
-        * [方法：taskDef.promised](#方法taskdefpromised)
-        * [方法：taskDef.rejected](#方法taskdefrejected)
-        * [解析范围](#解析范围)
-        * [下载任务](#下载任务)
-        * [执行任务](#执行任务)
-        * [方法：task.run](#方法taskrun)
-        * [方法：task.map](#方法taskmap)
-      * [远程接口](#远程接口)
-        * [任务注册/register_task](#任务注册register_task)
-        * [任务下载/download_task](#任务下载download_task)
-        * [任务执行/execute_task](#任务执行execute_task)
-        * [资源query](#资源query)
-      * [其它](#其它)
-        * [资源订阅/subscribe](#资源订阅subscribe)
-        * [资源请求/require](#资源请求require)
-        * [方法task.reduce](#方法taskreduce)
-        * [方法task.daemon](#方法taskdaemon)
-  * [实现](#实现)
-  * [Q&amp;A](#qa)
+
+* [PEDT Specifications](#pedt-specifications)
+* [概要](#概要)
+* [规范](#规范)
+  * [PEDT define specification](#pedt-define-specification)
+    * [基础定义](#基础定义)
+      * [任务定义（taskDef）](#任务定义taskdef)
+      * [任务（task/distribution task）](#任务taskdistribution-task)
+      * [任务标识（taskId）](#任务标识taskid)
+      * [字符串（string）](#字符串string)
+      * [方法(method)](#方法method)
+        * [任务分发范围(distribution scope)](#任务分发范围distribution-scope)
+        * [任务参数（arguments）](#任务参数arguments)
+    * [规范](#规范-1)
+      * [PEDT define specification 0.9](#pedt-define-specification-09)
+      * [PEDT define specification 1.0](#pedt-define-specification-10)
+      * [PEDT define specification 1.1](#pedt-define-specification-11)
+    * [keywords](#keywords)
+  * [PEDT process specification](#pedt-process-specification)
+    * [基础定义](#基础定义-1)
+      * [PEDT任务的四个处理阶段](#pedt任务的四个处理阶段)
+      * [PEDT任务的三个特定处理方法（process method）](#pedt任务的三个特定处理方法process-method)
+      * [PEDT任务的两个特定分发方法（distribution method）](#pedt任务的两个特定分发方法distribution-method)
+      * [对处理系统的基本需求](#对处理系统的基本需求)
+    * [规范](#规范-2)
+      * [PEDT process specification 1.0](#pedt-process-specification-10)
+  * [PEDT interface specification](#pedt-interface-specification)
+    * [本地接口](#本地接口)
+      * [混入对象：mix](#混入对象mix)
+      * [HTTP请求：distributed_request](#http请求distributed_request)
+      * [方法：taskDef.distributed](#方法taskdefdistributed)
+      * [方法：taskDef.promised](#方法taskdefpromised)
+      * [方法：taskDef.rejected](#方法taskdefrejected)
+      * [解析范围](#解析范围)
+      * [下载任务](#下载任务)
+      * [执行任务](#执行任务)
+      * [方法：task.run](#方法taskrun)
+      * [方法：task.map](#方法taskmap)
+    * [远程接口](#远程接口)
+      * [任务注册/register_task](#任务注册register_task)
+      * [任务下载/download_task](#任务下载download_task)
+      * [任务执行/execute_task](#任务执行execute_task)
+      * [资源query](#资源query)
+    * [其它](#其它)
+      * [资源订阅/subscribe](#资源订阅subscribe)
+      * [资源请求/require](#资源请求require)
+      * [方法task.reduce](#方法taskreduce)
+      * [方法task.daemon](#方法taskdaemon)
+* [实现](#实现)
+* [Q&amp;A](#qa)
 
 # 规范
 
@@ -503,7 +504,7 @@ reserved tokens
 
 #### PEDT任务的三个特定处理方法（process method）
 
-在taskDef中可以声明三个处理方法，即taskDef.distributed和taskDef.promised。
+在taskDef中可以声明三个处理方法，即taskDef.distributed、taskDef.promised和taskDef.rejected。
 
 * distributed方法
   
@@ -634,7 +635,7 @@ PEDT要求处理系统必须具备如下能力，这些能力简单地描述为�
    > 
    > > taskOrder.x0 = results[0], ...
    > 
-   > 2.3 getTaskResult
+   > 2.3 pickTaskResult
    > 
    > > 2.3.1 得到结果值：taskResult = taskOrder
    > > 
@@ -845,7 +846,13 @@ function taskDef.promised(taskResult)
 
 promised()是taskDef的一个可选声明的处理方法。它可以在每次taskDef执行时得到一次处理返回值(taskResult)的机会。在promised()中可以修改taskResult，或返回新的值。甚至，也可以在promised()中调用新的分发方法。
 
-如果promised()有返回值，则使用该返回值作为taskOrder的执行结果；否则仍然以taskResult作为执行结果——无论它是否在promise()中修改过。
+如果promised()有非null的返回值，则使用该返回值作为当前taskOrder的执行结果；否则仍然以taskResult作为执行结果——无论它是否在promise()中修改过。
+
+> NOTE: 不能在promised()中直接返回结果值null，因为这会被理解为“使用当前taskResult”。但在具体的实现环境中，也可以通过返回一个promise的方法来达到相同的效果。例如：
+> 
+> ``` javascript
+> return Promise.resolve(null)
+> ```
 
 #### 方法：taskDef.rejected
 
@@ -858,17 +865,23 @@ function taskDef.rejected(reason)
 
 说明：
 
-rejected()是taskDef的一个可选声明的处理方法。它可以在每次taskDef执行出错时得到一次处置机会。在promised()中可以构造并返回一个新的taskResult值，或继续触发rejected。
+rejected()是taskDef的一个可选声明的处理方法。它可以在每次taskDef执行出错时得到一次处置机会。在rejected()中可以构造并返回一个新的taskResult值，或继续触发reject。
 
-也可以在rejected()中调用新的分发方法，并返回后者的结果。
+也可以在rejected()中调用新的分发方法，并返回后者的结果；如果在rejected()中出现错误reason2，处理系统将忽略原有错误，而以新的reason2返回错误。
 
-如果rejected没有返回值，则taskResult为null值；否则以rejected的返回结果作为taskResult值。rejected可以显式地reject新的reason来来继续触发异常。
+如果rejected()有非null的返回值，则使用该返回值作为当前taskOrder的正确执行结果；否则它仍然以reason作为一个出错的结果。如果用户代码自行reject新的（或既有的）reason，则也将是一个出错的结果。
 
-> NOTE: 如何reject新的reason是由处理系统决定的。例如在javascript中的：
+> NOTE 1: 如何reject新的reason是由处理系统决定的。例如在javascript中的：
 > 
-> > ``` javascript
-> > return Promise.reject(reason)
-> > ```
+> ``` javascript
+> return Promise.reject(reason)
+> ```
+> 
+> NOTE 2: 与taskDef.promised()相同，在具体的处理系统中，用户代码也可以返回null值。例如：
+> 
+> ``` javascript
+> return Promise.resolve(null)
+> ```
 
 #### 解析范围
 
