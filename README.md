@@ -26,6 +26,7 @@ N4C最初提出的背景是面向实时计算的，它对实时计算提出了�
     * [redpoll](#redpoll)
     * [harpseal](#harpseal)
     * [tundrawolf](#tundrawolf)
+    * [pedt-scala](#pedt-scala)
   * [N4C implements](#n4c-implements)
     * [ngx_4c](#ngx_4c)
     * [sandpiper](#sandpiper)
@@ -68,14 +69,19 @@ PEDT旨在为可计算集群提供一种轻量、高效和跨平台的可靠任�
 * [redpoll for nodejs](https://github.com/aimingoo/redpoll)
 * [harpseal for lua](https://github.com/aimingoo/harpseal)
 * [tundrawolf for nginx_lua](https://github.com/aimingoo/tundrawolf)
+* [pedt-scala](https://github.com/cyber4ron/pedt-scala)
 
 ### redpoll
 
 redpoll（红顶雀）是一个nodejs上的项目，它完整地实现了PEDT 1.1。它可以作为一个npm的模块安装。
 
+[https://github.com/aimingoo/redpoll](https://github.com/aimingoo/redpoll)
+
 ### harpseal
 
 harpseal（竖琴海豹）是一个lua上的项目，它在原生lua上实现了PEDT 1.1。它需要LuaScoket模块来实现http client，并且需要copas模块来实现并行的http requests。
+
+> [https://github.com/aimingoo/harpseal](https://github.com/aimingoo/harpseal)
 
 harpseal实现了一个完整的distributionScope解析函数(prefixParse in infra/taskhelper.lua)，这是最符合PEDT规范的三段标记(three parts token)解析算法。这与其它（例如redpoll for nodejs）很不相同，他们（后者）通常采用简单的前缀匹配来处理三段标记。参见：
 
@@ -94,9 +100,23 @@ harpseal还实现了一个递归注册taskDef的工具，可以将多层次的ta
 
 tundrawolf（冻原狼）是一个nginx_lua上的项目，它与harpseal（竖琴海豹）项目是基本相同的，但直接使用nginx lua中内置的http client、MD5、BASE64等功能/模块，是专门为nginx lua环境定制的。
 
+> [https://github.com/aimingoo/tundrawolf](https://github.com/aimingoo/tundrawolf)
+
 tundrawolf实现了一种独特的（独立的）机制：路由发现（system_route discoveries）。用于管理当前结点中注册到系统路由(system_route)的对象。这些对象可以是任何（除lua false/nil值之外的）东西。一旦这些对象注册到系统路由，那么它就可以在Promise框架中作为并行对象来使用了。
 
 tundrawolf通常是在nginx lua中实现N4C的基础组件。
+
+### PEDT for Scala
+
+PEDT-scala是一个在scala上，基于Nashorn Javascript实现的PEDT协议。采用了scala来实现PEDT协议本身（其"com.wandoujia.n4c.pedt.core.PEDT4JS"是一个原生的java对象），并使用javascript来交付可扩展的可编程接口。
+
+> [https://github.com/cyber4ron/pedt-scala](https://github.com/cyber4ron/pedt-scala)
+
+PEDT-scala实现了一个简单的、测试用的n4c mock，部分第三方项目可以参考该mock来完成PEDT协议的测试（另外，也可以选用Sandpiper in nodejs来作为测试用的资源服务器）。
+
+PEDT-scala描述了一个清晰而简洁的工作框架。
+
+![illustrate pedt-scala](https://github.com/cyber4ron/notes/raw/master/images/pedt-scala.png)
 
 ## N4C implements
 
@@ -183,3 +203,4 @@ sandpiper提供一些小工具，包括一个资源服务（用于快速地检�
 ``` text
 	2015.11		N4C opensource and github hosted.
 ```
+

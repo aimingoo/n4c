@@ -735,7 +735,7 @@ PEDT要求处理系统必须具备如下能力，这些能力简单地描述为�
    > > 
    > > NOTE: 5.2和5.3是强烈推荐实现(strong recommend)，但不是必需实现的。
    > > 
-   > > NOTE: 过程5.1与后面的两个处理在对待args上并不相同。5.1是将args作为函数的唯一参数调用，而5.2和5.3是调用mix()将args混入到taskOrder。
+   > > NOTE: 过程5.2与其它两个处理在对待args上并不相同。5.2是将args作为函数的唯一参数调用，而5.1和5.3是调用mix()将args混入到taskOrder。
    > > 
    > > NOTE: 对于过程5.3，当task是一个taskObject时，即使它拥有（从taskDef继承来的）distributed方法，也不会被调用。
 
