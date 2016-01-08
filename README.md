@@ -26,7 +26,7 @@ N4C最初提出的背景是面向实时计算的，它对实时计算提出了�
     * [redpoll](#redpoll)
     * [harpseal](#harpseal)
     * [tundrawolf](#tundrawolf)
-    * [pedt-scala](#pedt-scala)
+    * [pedt-scala](#pedt-for-scala)
   * [N4C implements](#n4c-implements)
     * [ngx_4c](#ngx_4c)
     * [sandpiper](#sandpiper)
